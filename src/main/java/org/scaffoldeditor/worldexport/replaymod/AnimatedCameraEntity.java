@@ -133,7 +133,7 @@ public class AnimatedCameraEntity extends Entity implements RollProvider, FovPro
     }
 
     public void setCameraPosRot(Location loc) {
-        setCameraRotation(loc.getPitch(), loc.getYaw(), roll);
+        setCameraRotation(loc.getYaw(), loc.getPitch(), roll);
         setCameraPosition(loc.getX(), loc.getY(), loc.getZ());
     }
 
