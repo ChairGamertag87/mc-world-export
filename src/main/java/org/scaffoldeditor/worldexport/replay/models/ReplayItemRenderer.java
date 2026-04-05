@@ -23,7 +23,7 @@ import net.minecraft.item.Items;
 public class ReplayItemRenderer {
 
     public static final Material ITEM_MAT = new Material().setColor("world").setRoughness(1).setTransparent(true);
-    public static final Material SHEID_MAT = new Material().setColor("shield").setRoughness(1).setTransparent(true);
+    public static final Material SHIELD_MAT = new Material().setColor("shield").setRoughness(1).setTransparent(true);
 
     public static void renderItem(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, Obj obj, BakedModel model, MaterialConsumer materials) {
         renderItem(stack, renderMode, leftHanded, matrices, obj, model);
@@ -61,7 +61,7 @@ public class ReplayItemRenderer {
             materials.addTexture("world", new PromisedReplayTexture(TextureExtractor.getAtlasTexture()));
         }
 
-        materials.addMaterial("shield", SHEID_MAT);
+        materials.addMaterial("shield", SHIELD_MAT);
 
         if (!materials.hasTexture("shield")) {
             materials.addTexture("shield", new PromisedReplayTexture(TextureExtractor.getAtlasTexture(TexturedRenderLayers.SHIELD_PATTERNS_ATLAS_TEXTURE)));

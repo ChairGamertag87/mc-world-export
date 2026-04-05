@@ -259,6 +259,8 @@ public abstract class LivingEntityModelAdapter<T extends LivingEntity, M extends
         ((ModelPartAccessor) (Object) part).getChildren().forEach((key, child) -> {
             forEachPartInternal(key, child, consumer, offset, false);
         });
+
+        offset.pop();
     }
  
     /**

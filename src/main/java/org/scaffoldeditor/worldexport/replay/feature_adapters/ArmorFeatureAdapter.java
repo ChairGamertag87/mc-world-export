@@ -177,12 +177,20 @@ public class ArmorFeatureAdapter implements ReplayFeatureAdapter<ReplayModelPart
 
         @Override
         public boolean equals(Object obj) {
-            return (obj instanceof ArmorModelEntry && this.hashCode() == obj.hashCode());
+            if (!(obj instanceof ArmorModelEntry other)) return false;
+            return Objects.equals(head, other.head)
+                    && Objects.equals(body, other.body)
+                    && Objects.equals(leftArm, other.leftArm)
+                    && Objects.equals(rightArm, other.rightArm)
+                    && Objects.equals(leftLeg, other.leftLeg)
+                    && Objects.equals(rightLeg, other.rightLeg);
         }
 
         @Override
         public Iterator<ReplayModelPart> iterator() {
-            return Arrays.stream(new ReplayModelPart[] { head, body, leftArm, rightArm, leftLeg, rightLeg }).iterator();
+            return Arrays.stream(new ReplayModelPart[] { head, body, leftArm, rightArm, leftLeg, rightLeg })
+                    .filter(Objects::nonNull)
+                    .iterator();
         }
     }
 

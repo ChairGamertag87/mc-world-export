@@ -80,10 +80,6 @@ public class ReplayExportMod implements ClientModInitializer {
     public void onInitializeClient() {
         instance = this;
 
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-        }
-
-
         ClientBlockPlaceCallback.EVENT.register((pos, oldState, state, world) -> {
             blockUpdateListeners.forEach(listener -> listener.place(pos, oldState, state, world));
         });
@@ -106,7 +102,7 @@ public class ReplayExportMod implements ClientModInitializer {
         
         // Allows you to spectate camera entity in replay editor.
         WorldRenderEvents.AFTER_SETUP.register(context -> {
-            if (client.crosshairTarget.getType() == HitResult.Type.ENTITY) {
+            if (client.crosshairTarget != null && client.crosshairTarget.getType() == HitResult.Type.ENTITY) {
                 Entity ent = ((EntityHitResult) client.crosshairTarget).getEntity();
                 if (ent instanceof AnimatedCameraEntity) {
                     client.targetedEntity = ent;
