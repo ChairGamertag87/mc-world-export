@@ -42,7 +42,8 @@ public class ReplayExportMod implements ClientModInitializer {
             EntityType.Builder.create(AnimatedCameraEntity::new, SpawnGroup.MISC)
                     .dimensions(.75f, .75f)
                     .eyeHeight(0f)
-                    .disableSummon().build(AnimatedCameraEntity.ID.toString()));
+                    .disableSummon()
+                    .disableSaving().build(AnimatedCameraEntity.ID.toString()));
         
     public static final EntityModelLayer CAMERA_MODEL_LAYER = new EntityModelLayer(Identifier.of("worldexport", "camera"), "main");
 
