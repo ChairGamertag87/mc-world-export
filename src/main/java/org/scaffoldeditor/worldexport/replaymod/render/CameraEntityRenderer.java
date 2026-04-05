@@ -16,7 +16,7 @@ import net.minecraft.util.Identifier;
 
 public class CameraEntityRenderer extends EntityRenderer<AnimatedCameraEntity> {
 
-    public static final Identifier TEXTURE = new Identifier("replaymod", "camera_head.png");
+    public static final Identifier TEXTURE = Identifier.of("replaymod", "camera_head.png");
     // private final RenderLayer RENDER_LAYER = RenderLayer.getEntitySolid(TEXTURE);
 
     // private final ModelPart model;

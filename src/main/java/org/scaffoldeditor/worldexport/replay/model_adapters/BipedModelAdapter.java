@@ -25,7 +25,6 @@ public class BipedModelAdapter<T extends LivingEntity> extends AnimalModelAdapte
 
     public BipedModelAdapter(T entity, Identifier texture) throws IllegalArgumentException {
         super(entity, texture);
-        elytraAdapter = new ElytraFeatureAdapter(this);
     }
 
     private static final MinecraftClient client = MinecraftClient.getInstance();
@@ -40,7 +39,7 @@ public class BipedModelAdapter<T extends LivingEntity> extends AnimalModelAdapte
 
         @Override
         public BipedModelAdapter<U> create(U entity) {
-            return new BipedModelAdapter<>(entity, texture);
+            return new BipedModelAdapter<U>(entity, texture);
         }
 
     }
@@ -48,6 +47,7 @@ public class BipedModelAdapter<T extends LivingEntity> extends AnimalModelAdapte
     protected HeldItemFeatureAdapter heldItemAdapter;
     protected ArmorFeatureAdapter armorAdapter;
     protected ElytraFeatureAdapter elytraAdapter;
+
 
     @Override
     protected MultipartReplayModel captureBaseModel(AnimalModel<T> model) {
@@ -59,21 +59,11 @@ public class BipedModelAdapter<T extends LivingEntity> extends AnimalModelAdapte
         armorAdapter = new ArmorFeatureAdapter(this,
                 new BipedEntityModel<>(leggingsModel), new BipedEntityModel<>(armorModel));
 
+        elytraAdapter = new ElytraFeatureAdapter(this);
+
         return rModel;
     }
-
-    @Override
-    public void animateModel(float limbAngle, float limbDistance, float tickDelta) {
-        super.animateModel(limbAngle, limbDistance, tickDelta);
-        elytraAdapter.animateModel(limbAngle, limbDistance, tickDelta);
-    }
-
-    @Override
-    public void setAngles(float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-        super.setAngles(limbAngle, limbDistance, animationProgress, headYaw, headPitch);
-        elytraAdapter.setAngles(limbAngle, limbDistance, animationProgress, headYaw, headPitch);
-    }
-
+    
     @Override
     protected Pose<ReplayModelPart> writePose(float tickDelta) {
         Pose<ReplayModelPart> pose = super.writePose(tickDelta);

@@ -542,11 +542,7 @@ def parse_multipart(model: ET.Element,
             transform = frame[id + 1].split(' ')
             if len(transform) <= 10: continue
             if transform[10] == '0':
-                # This codebase gets more and more messy lol.
-                try:
-                    seperate.add(mesh)
-                except NameError:
-                    print("Bone " + name + " did not have a mesh.")
+                seperate.add(mesh)
                 continue
         
         

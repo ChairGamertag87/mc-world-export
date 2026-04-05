@@ -2,7 +2,7 @@
     "required": false,
     "minVersion": "0.8",
     "package": "com.igrium.replay_debugger.mixins",
-    "compatibilityLevel": "JAVA_16",
+    "compatibilityLevel": "JAVA_21",
     "mixins": [
     ],
     "client": [

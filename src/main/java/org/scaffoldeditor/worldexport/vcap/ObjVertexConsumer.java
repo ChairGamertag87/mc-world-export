@@ -63,7 +63,7 @@ public class ObjVertexConsumer implements VertexConsumer {
     }
 
     @Override
-    public ObjVertexConsumer vertex(double x, double y, double z) {
+    public ObjVertexConsumer vertex(float x, float y, float z) {
         posCache.set(x, y, z).mulPosition(transform);
         vertCache[head] = new float[] { (float) posCache.x(), (float) posCache.y(), (float) posCache.z() };
         return this;
@@ -94,15 +94,11 @@ public class ObjVertexConsumer implements VertexConsumer {
     public ObjVertexConsumer normal(float x, float y, float z) {
         Vector3f vec = new Vector3f(x, y, z).mulDirection(transform);
         normalCache[head] = new float[] { vec.x(), vec.y(), vec.z() };
-        return this;
-    }
-
-    @Override
-    public void next() {
+        // normal() is the last per-vertex call in Minecraft's rendering pipeline,
+        // so we use it as the commit signal (replacing the removed next() method).
         if (head >= 3) {
             int objHead = baseObj.getNumVertices();
             int[] indices = new int[4];
-            // baseObj.setActiveGroupNames(Arrays.asList(MeshWriter.genGroupName(0)));
 
             for (int i = 0; i < 4; i++) {
                 indices[i] = objHead + i;
@@ -117,17 +113,6 @@ public class ObjVertexConsumer implements VertexConsumer {
         } else {
             head++;
         }
-        
+        return this;
     }
-
-    @Override
-    public void fixedColor(int red, int green, int blue, int alpha) {
-
-    }
-
-    @Override
-    public void unfixColor() {
-
-    }
-    
 }

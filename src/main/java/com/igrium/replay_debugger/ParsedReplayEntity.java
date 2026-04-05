@@ -29,7 +29,6 @@ import org.scaffoldeditor.worldexport.replay.models.ReplayModel;
 import org.scaffoldeditor.worldexport.replay.models.Transform;
 import org.scaffoldeditor.worldexport.replay.models.ReplayModel.Pose;
 import org.scaffoldeditor.worldexport.util.XMLUtils;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
@@ -158,7 +157,7 @@ public class ParsedReplayEntity implements BaseReplayEntity {
 
         String className = xml.getAttribute("class");
         if (className.length() > 0) {
-            entity.minecraftID = new Identifier(className);
+            entity.minecraftID = Identifier.of(className);
         } else {
             LogManager.getLogger().warn("Entity: {} is missing a class name!", name);
         }
@@ -224,8 +223,7 @@ public class ParsedReplayEntity implements BaseReplayEntity {
         frame = frame.strip();
         String[] frameParts = frame.split(";");
         if (frameParts.length != frameSize) {
-//            throw new XMLParseException("Frame has an incorrect number of bones. Expected: "+frameSize+". Actual: "+frameParts.length);
-            LoggerFactory.getLogger(ParsedReplayEntity.class).warn("Frame has an incorrect number of bones. Expected: {}; actual: {}.", frameSize, frameParts.length);
+            throw new XMLParseException("Frame has an incorrect number of bones. Expected: "+frameSize+". Actual: "+frameParts.length);
         }
 
         for (int i = 0; i < frameParts.length; i++) {

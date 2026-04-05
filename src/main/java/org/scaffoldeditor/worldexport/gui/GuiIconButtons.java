@@ -21,10 +21,10 @@ public final class GuiIconButtons {
         return new Impl(container, texture, textureSize, spriteSize, defaultUV, hoverUV, disabledUV);
     }
 
-    public static final IconFactory TRASH = new FactoryImpl(new Identifier("worldexport", "icons/trash.png"),
+    public static final IconFactory TRASH = new FactoryImpl(Identifier.of("worldexport", "icons/trash.png"),
             new Dimension(48, 16), new Dimension(16, 16), new Point(0, 0), new Point(16, 0), new Point(32, 0));
     
-    public static final IconFactory PENCIL = new FactoryImpl(new Identifier("worldexport", "icons/pencil.png"),
+    public static final IconFactory PENCIL = new FactoryImpl(Identifier.of("worldexport", "icons/pencil.png"),
     new Dimension(48, 16), new Dimension(16, 16), new Point(0, 0), new Point(16, 0), new Point(32, 0));
 
     public static interface IconFactory {

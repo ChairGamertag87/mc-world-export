@@ -2,8 +2,6 @@ package org.scaffoldeditor.worldexport.replay.model_adapters;
 
 import javax.annotation.Nullable;
 
-import com.replaymod.core.versions.MCVer;
-import net.minecraft.client.MinecraftClient;
 import org.joml.Matrix4dc;
 import org.joml.Quaterniond;
 import org.joml.Quaterniondc;
@@ -23,7 +21,7 @@ import org.scaffoldeditor.worldexport.replay.models.OverrideChannel.OverrideChan
 import org.scaffoldeditor.worldexport.util.MathUtils;
 
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.PlayerModelPart;
+import net.minecraft.entity.player.PlayerModelPart;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,7 +30,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import org.slf4j.LoggerFactory;
 
 /**
  * Base replay model generator for living entities (with living entity renderers).
@@ -132,40 +129,10 @@ public abstract class LivingModelAdapter<T extends LivingEntity, M extends Repla
     protected float getAnimationProgress(float tickDelta) {
         return entity.age + tickDelta;
     }
-
-    protected boolean waitForReady;
-
-    /**
-     * Some model adapters (the player) need a frame to process before they can begin export.
-     * If this method returns false, don't attempt to get the pose yet.
-     * @return If the model is ready.
-     */
-    protected boolean isReady() {
-        return true;
-    }
-
-    private int unreadyTicks = 0;
+    
 
     @Override
     public Pose<?> getPose(float tickDelta) {
-
-        if (!isReady()) {
-            if (waitForReady) {
-                // This codebase is getting dumber and dumber
-                while (!isReady()) {
-                    ((MCVer.MinecraftMethodAccessor) MinecraftClient.getInstance()).replayModExecuteTaskQueue();
-                }
-            }
-            else {
-                unreadyTicks++;
-                if (unreadyTicks % 20 == 0) {
-                    LoggerFactory.getLogger(getClass()).warn("{} went {} ticks without being ready!",
-                            entity.getName().getString(), unreadyTicks);
-                }
-
-                return new Pose<>();
-            }
-        }
 
         // Add override channel.
         boolean hasTint = false;
@@ -191,7 +158,8 @@ public abstract class LivingModelAdapter<T extends LivingEntity, M extends Repla
         float headYaw = MathHelper.lerpAngleDegrees(tickDelta, entity.prevHeadYaw, entity.headYaw);
         float headYawFinal = headYaw - bodyYaw;
 
-        if (entity.hasVehicle() && entity.getVehicle() instanceof LivingEntity parent) {
+        if (entity.hasVehicle() && entity.getVehicle() instanceof LivingEntity) {
+            LivingEntity parent = (LivingEntity) entity.getVehicle();
             bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, parent.prevBodyYaw, parent.bodyYaw);
             headYawFinal = headYaw - bodyYaw;
 
@@ -325,6 +293,26 @@ public abstract class LivingModelAdapter<T extends LivingEntity, M extends Repla
         } else if (entity.isUsingRiptide()) {
             rotation.rotateX(Math.toRadians(-90 - entity.getPitch()));
             rotation.rotateY(Math.toRadians((entity.age + tickDelta) * -75));
+        } else if (entity.isFallFlying()) {
+            // Match LivingEntityRenderer.setupTransforms for elytra gliders.
+            float fallFlyingTicks = entity.getFallFlyingTicks() + tickDelta;
+            float rollFactor = MathHelper.clamp(fallFlyingTicks * fallFlyingTicks / 100f, 0f, 1f);
+            // Sign of the X rotation is flipped relative to vanilla because the
+            // root bones bake a rotateX(PI) (to fold MC's Ry(180) * scale(-1,-1,1)
+            // setup into the rest pose). X rotations applied at the root end up in
+            // the opposite direction in that frame.
+            rotation.rotateX(Math.toRadians(rollFactor * (90f + entity.getPitch())));
+
+            Vec3d rotationVec = entity.getRotationVec(tickDelta);
+            Vec3d velocity = entity.getVelocity();
+            double velHorizSq = velocity.horizontalLengthSquared();
+            double rotHorizSq = rotationVec.horizontalLengthSquared();
+            if (velHorizSq > 0 && rotHorizSq > 0) {
+                double dot = (velocity.x * rotationVec.x + velocity.z * rotationVec.z)
+                        / Math.sqrt(velHorizSq * rotHorizSq);
+                double cross = velocity.x * rotationVec.z - velocity.z * rotationVec.x;
+                rotation.rotateY(Math.signum(cross) * Math.acos(dot));
+            }
         } else if (pose == EntityPose.SLEEPING) {
             Direction direction = entity.getSleepingDirection();
             float rot = direction != null ? getYaw(direction) : bodyYaw;

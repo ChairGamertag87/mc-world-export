@@ -33,7 +33,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
 
 public class GuiCameraManager extends GuiScreen implements Closeable {
-    public static final Identifier TRASH_ICON = new Identifier("worldexport", "icons/trash.png");
+    public static final Identifier TRASH_ICON = Identifier.of("worldexport", "icons/trash.png");
 
     protected static final int ENTRY_WIDTH = 200;
 

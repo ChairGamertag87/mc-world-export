@@ -1,37 +1,47 @@
-# gradle
-
+# ---- Gradle / build outputs ----
 .gradle/
 build/
 out/
 classes/
+bin/
+remappedSrc/
 
-# eclipse
+# ---- Fabric / Minecraft runtime ----
+run/
+logs/
+*.log
 
-*.launch
-
-# idea
-
-.idea/
+# ---- IDEs ----
+cd "C:/Users/ChairGamertag87/Downloads/mc-world-export-0.9.1/mc-world-export-0.9.1"
+git init.idea/
 *.iml
 *.ipr
 *.iws
-
-# vscode
-
-.settings/
 .vscode/
-bin/
-.classpath
+.settings/
 .project
+.classpath
+*.launch
+.factorypath
 
-# macos
+# Eclipse
+.eclipse/
+eclipse/
 
+# ---- OS junk ----
 *.DS_Store
+Thumbs.db
+desktop.ini
 
-# fabric
+# ---- Claude / local working docs ----
+.claude/
+claude.md
+CLAUDE.md
+modif.md
+PORT_*.md
 
-run/
-
+# ---- Misc local files ----
 logo/
-dev/
-*.blend1
+*.bak
+*.tmp
+*.orig

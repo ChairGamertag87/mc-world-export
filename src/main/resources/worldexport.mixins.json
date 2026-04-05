@@ -2,21 +2,21 @@
   "required": true,
   "minVersion": "0.8",
   "package": "org.scaffoldeditor.worldexport.mixins",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
   ],
   "client": [
-    "AnimalModelAccessor",
     "ClientWorldMixin",
-    "ElytraEntityModelAccessor",
-    "GameRendererMixin",
-    "GuiRenderSettingsMixin",
+    "AnimalModelAccessor",
     "ModelPartAccessor",
+    "GuiRenderSettingsMixin",
     "QuadrupedModelAccessor",
-    "ReplayModMixin",
+    "ElytraModelAccessor",
     "SpriteAccessor",
     "SpriteMixin",
-    "TimelineMixin"
+    "TimelineMixin",
+    "ReplayModMixin",
+    "GameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

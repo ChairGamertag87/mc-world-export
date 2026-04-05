@@ -26,7 +26,7 @@ public final class MeshUtils {
 
     public static void appendCuboid(Cuboid cuboid, Obj target, Matrix4dc transform) {
         ObjVertexConsumer consumer = new ObjVertexConsumer(target, transform);
-        cuboid.renderCuboid(IDENTITY_ENTRY, consumer, 255, 0, 255, 255, 255, 255);
+        cuboid.renderCuboid(IDENTITY_ENTRY, consumer, 255, 0, 0xFFFFFFFF);
     }
     
     /**
@@ -44,7 +44,7 @@ public final class MeshUtils {
 
         part.forEachCuboid(new MatrixStack(), (matrix, path, index, cuboid) -> {
             if (mask && !path.equals("")) return;
-            cuboid.renderCuboid(IDENTITY_ENTRY, consumer, 255, 0, 255, 255, 255, 255);
+            cuboid.renderCuboid(IDENTITY_ENTRY, consumer, 255, 0, 0xFFFFFFFF);
         });
     }
 

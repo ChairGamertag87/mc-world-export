@@ -24,7 +24,7 @@ public abstract class GuiIconButton<T extends GuiIconButton<T>> extends Abstract
         DISABLED
     }
 
-    protected static final Identifier BUTTON_SOUND = new Identifier("gui.button.press");
+    protected static final Identifier BUTTON_SOUND = Identifier.of("gui.button.press");
     private SoundEvent sound = SoundEvents.UI_BUTTON_CLICK.value();
 
 

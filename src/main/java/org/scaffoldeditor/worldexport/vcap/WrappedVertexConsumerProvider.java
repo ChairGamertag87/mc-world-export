@@ -80,8 +80,8 @@ public class WrappedVertexConsumerProvider implements VertexConsumerProvider {
         }
 
         @Override
-        public VertexConsumer vertex(double var1, double var3, double var5) {
-            base.vertex(var1, var3, var5);
+        public VertexConsumer vertex(float var1, float var2, float var3) {
+            base.vertex(var1, var2, var3);
             return this;
         }
 
@@ -114,27 +114,12 @@ public class WrappedVertexConsumerProvider implements VertexConsumerProvider {
             base.normal(var1, var2, var3);
             return this;
         }
-
-        @Override
-        public void next() {
-            base.next();
-        }
-
-        @Override
-        public void fixedColor(int var1, int var2, int var3, int var4) {
-            base.fixedColor(var1, var2, var3, var4);
-        }
-
-        @Override
-        public void unfixColor() {
-            base.unfixColor();
-        }
     }
 
     public static final VertexConsumer EMPTY = new VertexConsumer() {
 
         @Override
-        public VertexConsumer vertex(double var1, double var3, double var5) {
+        public VertexConsumer vertex(float var1, float var2, float var3) {
             return this;
         }
 
@@ -162,16 +147,6 @@ public class WrappedVertexConsumerProvider implements VertexConsumerProvider {
         public VertexConsumer normal(float var1, float var2, float var3) {
             return this;
         }
-
-        @Override
-        public void next() {}
-
-        @Override
-        public void fixedColor(int var1, int var2, int var3, int var4) {}
-
-        @Override
-        public void unfixColor() {}
-        
     };
     
 }

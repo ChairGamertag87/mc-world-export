@@ -3,7 +3,6 @@ package org.scaffoldeditor.worldexport.replaymod.render;
 import java.util.Map;
 import java.util.Optional;
 
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -140,10 +139,7 @@ public class CameraPathRenderer extends EventRegistrations {
     private void drawLine(MatrixStack.Entry matrix, VertexConsumer consumer, float x1, float y1, float z1,
             float x2, float y2, float z2, int color) {
         
-        // Matrix4f model = matrix.getPositionMatrix();
-        // Matrix3f normal = matrix.getNormalMatrix();
         Matrix4f model = matrix.getPositionMatrix();
-        Matrix3f normal = matrix.getNormalMatrix();
 
         float dx = x2 - x1;
         float dy = y2 - y1;
@@ -153,13 +149,11 @@ public class CameraPathRenderer extends EventRegistrations {
 
         consumer.vertex(model, x1, y1, z1)
                 .color(color)
-                .normal(normal, dx / len, dy / len, dz / len)
-                .next();
+                .normal(matrix, dx / len, dy / len, dz / len);
 
         consumer.vertex(model, x2, y2, z2)
                 .color(color)
-                .normal(normal, dx / len, dy / len, dz / len)
-                .next();
+                .normal(matrix, dx / len, dy / len, dz / len);
     }
 
     protected boolean shouldRender() {

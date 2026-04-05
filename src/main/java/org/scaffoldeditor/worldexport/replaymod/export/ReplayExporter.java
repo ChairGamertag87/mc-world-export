@@ -17,6 +17,7 @@ import org.scaffoldeditor.worldexport.replaymod.util.ExportPhase;
 import com.google.common.collect.Iterables;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.systems.VertexSorter;
+import org.joml.Matrix4fStack;
 import com.replaymod.core.mixin.MinecraftAccessor;
 import com.replaymod.core.versions.MCVer;
 import com.replaymod.core.versions.MCVer.MinecraftMethodAccessor;
@@ -41,7 +42,6 @@ import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.Window;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
@@ -53,7 +53,7 @@ import net.minecraft.util.crash.CrashException;
  */
 public class ReplayExporter implements RenderInfo {
 
-    private static final Identifier SOUND_RENDER_SUCCESS = new Identifier("replaymod", "render_success");
+    private static final Identifier SOUND_RENDER_SUCCESS = Identifier.of("replaymod", "render_success");
     private final MinecraftClient client = MinecraftClient.getInstance();
 
     private static final int FPS = 20;
@@ -111,7 +111,7 @@ public class ReplayExporter implements RenderInfo {
         if (optionalVideoStartTime.isPresent() && (videoStart = optionalVideoStartTime.get()) > 0) {
             int delta = Math.min(videoStart, 1000);
             int replayTime = videoStart - delta;
-            timer.tickDelta = 0;
+            // tickDelta field is now private in RenderTickCounter.Dynamic; skipping reset
 
             while (replayTime < videoStart) {
                 replayTime += 50;
@@ -159,11 +159,11 @@ public class ReplayExporter implements RenderInfo {
             }
         }
 
-        RenderTickCounter timer = ((MinecraftAccessor) client).getTimer();
-        int elapsedTicks = timer.beginRenderTick(Util.getMeasuringTimeMs());
+        RenderTickCounter.Dynamic timer = (RenderTickCounter.Dynamic) ((MinecraftAccessor) client).getTimer();
+        int elapsedTicks = timer.beginRenderTick(Util.getMeasuringTimeMs(), true);
 
         executeTaskQueue();
-        
+
         while (elapsedTicks-- > 0) {
             client.tick();
         }
@@ -171,7 +171,7 @@ public class ReplayExporter implements RenderInfo {
         guiWindow.unbind();
 
         framesDone++;
-        return timer.tickDelta;
+        return timer.getTickDelta(false);
     }
 
     private void setup() {
@@ -329,10 +329,9 @@ public class ReplayExporter implements RenderInfo {
                             (float) (window.getFramebufferHeight() / window.getScaleFactor()), 1000, 3000),
                     VertexSorter.BY_Z            );
             
-            MatrixStack matrixStack = RenderSystem.getModelViewStack();
-            matrixStack.loadIdentity();
+            Matrix4fStack matrixStack = RenderSystem.getModelViewStack();
+            matrixStack.identity();
             matrixStack.translate(0, 0, -2000);
-            RenderSystem.applyModelViewMatrix();
             DiffuseLighting.enableGuiDepthLighting();
 
             gui.toMinecraft().init(client, window.getScaledWidth(), window.getScaledHeight());

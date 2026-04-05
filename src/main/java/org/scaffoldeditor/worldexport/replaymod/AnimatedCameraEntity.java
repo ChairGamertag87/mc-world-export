@@ -1,6 +1,5 @@
 package org.scaffoldeditor.worldexport.replaymod;
 
-import net.minecraft.network.packet.Packet;
 import org.apache.logging.log4j.LogManager;
 import org.scaffoldeditor.worldexport.replaymod.camera_animations.Rotation;
 import org.scaffoldeditor.worldexport.replaymod.util.FovProvider;
@@ -10,18 +9,16 @@ import com.replaymod.replaystudio.util.Location;
 
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.data.DataTracker;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class AnimatedCameraEntity extends Entity implements RollProvider, FovProvider {
 
-    public static final Identifier ID = new Identifier("worldexport", "camera");
+    public static final Identifier ID = Identifier.of("worldexport", "camera");
 
     public float roll;
     public double fov;
@@ -36,7 +33,7 @@ public class AnimatedCameraEntity extends Entity implements RollProvider, FovPro
     }
 
     @Override
-    protected void initDataTracker() {        
+    protected void initDataTracker(DataTracker.Builder builder) {
     }
 
     @Override
@@ -45,11 +42,6 @@ public class AnimatedCameraEntity extends Entity implements RollProvider, FovPro
 
     @Override
     protected void writeCustomDataToNbt(NbtCompound var1) {        
-    }
-
-    @Override
-    public Packet<ClientPlayPacketListener> createSpawnPacket() {
-        throw new IllegalStateException("This entity is client-side only.");
     }
 
     @Override
@@ -72,11 +64,6 @@ public class AnimatedCameraEntity extends Entity implements RollProvider, FovPro
 
     public void setFov(double fov) {
         this.fov = fov;
-    }
-
-    @Override
-    protected float getEyeHeight(EntityPose pose, EntityDimensions dimensions) {
-        return 0;
     }
 
     public int getColor() {

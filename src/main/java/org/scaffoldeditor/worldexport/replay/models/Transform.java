@@ -37,30 +37,8 @@ public class Transform {
         }
     };
 
-    public static final Transform INVISIBLE = new Transform(false);
-
-    public Transform withTranslation(Vector3dc translation) {
-        return new Transform(translation, rotation, scale, visible);
-    }
-
-    public Transform withRotation(Quaterniondc rotation) {
-        return new Transform(translation, rotation, scale, visible);
-    }
-
-    public Transform withScale(Vector3dc scale) {
-        return new Transform(translation, rotation, scale, visible);
-    }
-
-    public Transform withVisible(boolean visible) {
-        return new Transform(translation, rotation, scale, visible);
-    }
-
     public Transform(Vector3dc translation, Quaterniondc rotation, Vector3dc scale) {
         this(translation, rotation, scale, true);
-    }
-
-    public Transform(Vector3dc translation, Quaterniondc rotation) {
-        this(translation, rotation, new Vector3d(1d));
     }
 
     public Transform(Vector3dc translation, Quaterniondc rotation, Vector3dc scale, boolean visible) {

@@ -42,8 +42,8 @@ public class ReplayItemRenderer {
         // VertexConsumerProvider vertices = MeshUtils.wrapVertexConsumer(new ObjVertexConsumer(obj));
         VertexConsumerProvider vertices = new WrappedVertexConsumerProvider(new ObjVertexConsumer(obj), null,
                 ImmutableSet.of(
-                        RenderLayer.getDirectGlint(),
-                        RenderLayer.getDirectEntityGlint()));
+                        RenderLayer.getGlint(),
+                        RenderLayer.getEntityGlint()));
 
         MinecraftClient.getInstance().getItemRenderer().renderItem(stack, renderMode, leftHanded, matrices, vertices,
                 255, 0, model);

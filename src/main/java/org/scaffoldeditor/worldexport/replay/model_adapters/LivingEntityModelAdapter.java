@@ -64,6 +64,22 @@ public abstract class LivingEntityModelAdapter<T extends LivingEntity, M extends
      */
     protected Pose<ReplayModelPart> lastPose;
 
+    /**
+     * Last animation parameters passed to {@link #setAngles}, cached so feature
+     * adapters (e.g. elytra) can re-apply them to their own secondary models.
+     */
+    protected float lastLimbAngle;
+    protected float lastLimbDistance;
+    protected float lastAnimationProgress;
+    protected float lastHeadYaw;
+    protected float lastHeadPitch;
+
+    public float getLastLimbAngle() { return lastLimbAngle; }
+    public float getLastLimbDistance() { return lastLimbDistance; }
+    public float getLastAnimationProgress() { return lastAnimationProgress; }
+    public float getLastHeadYaw() { return lastHeadYaw; }
+    public float getLastHeadPitch() { return lastHeadPitch; }
+
     public LivingEntityModelAdapter(T entity) throws IllegalArgumentException {
         super(entity);
 
@@ -108,6 +124,11 @@ public abstract class LivingEntityModelAdapter<T extends LivingEntity, M extends
     @Override
     public void setAngles(float limbAngle, float limbDistance, float animationProgress, float headYaw,
             float headPitch) {
+        this.lastLimbAngle = limbAngle;
+        this.lastLimbDistance = limbDistance;
+        this.lastAnimationProgress = animationProgress;
+        this.lastHeadYaw = headYaw;
+        this.lastHeadPitch = headPitch;
         this.model.setAngles(getEntity(), limbAngle, limbDistance, animationProgress, headYaw, headPitch);
     }
 

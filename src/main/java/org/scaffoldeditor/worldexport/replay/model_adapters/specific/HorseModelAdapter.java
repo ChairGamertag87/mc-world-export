@@ -15,13 +15,13 @@ public class HorseModelAdapter extends AnimalModelAdapter<HorseEntity> {
 
     private static final Map<HorseColor, Identifier> TEXTURES = Util.make(Maps.newEnumMap(HorseColor.class),
             enumMap -> {
-                enumMap.put(HorseColor.WHITE, new Identifier("textures/entity/horse/horse_white.png"));
-                enumMap.put(HorseColor.CREAMY, new Identifier("textures/entity/horse/horse_creamy.png"));
-                enumMap.put(HorseColor.CHESTNUT, new Identifier("textures/entity/horse/horse_chestnut.png"));
-                enumMap.put(HorseColor.BROWN, new Identifier("textures/entity/horse/horse_brown.png"));
-                enumMap.put(HorseColor.BLACK, new Identifier("textures/entity/horse/horse_black.png"));
-                enumMap.put(HorseColor.GRAY, new Identifier("textures/entity/horse/horse_gray.png"));
-                enumMap.put(HorseColor.DARK_BROWN, new Identifier("textures/entity/horse/horse_darkbrown.png"));
+                enumMap.put(HorseColor.WHITE, Identifier.of("textures/entity/horse/horse_white.png"));
+                enumMap.put(HorseColor.CREAMY, Identifier.of("textures/entity/horse/horse_creamy.png"));
+                enumMap.put(HorseColor.CHESTNUT, Identifier.of("textures/entity/horse/horse_chestnut.png"));
+                enumMap.put(HorseColor.BROWN, Identifier.of("textures/entity/horse/horse_brown.png"));
+                enumMap.put(HorseColor.BLACK, Identifier.of("textures/entity/horse/horse_black.png"));
+                enumMap.put(HorseColor.GRAY, Identifier.of("textures/entity/horse/horse_gray.png"));
+                enumMap.put(HorseColor.DARK_BROWN, Identifier.of("textures/entity/horse/horse_darkbrown.png"));
             });
 
     public HorseModelAdapter(HorseEntity entity) throws IllegalArgumentException {

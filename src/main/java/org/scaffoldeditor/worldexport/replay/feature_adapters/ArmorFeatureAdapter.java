@@ -187,6 +187,9 @@ public class ArmorFeatureAdapter implements ReplayFeatureAdapter<ReplayModelPart
     }
 
     private Identifier getArmorTexture(ArmorItem item, boolean legs) {
-        return new Identifier("textures/models/armor/" + item.getMaterial().getName() + "_layer_" + (legs ? 2 : 1) + ".png");
+        String materialName = item.getMaterial().getKey()
+                .map(k -> k.getValue().getPath())
+                .orElse("unknown");
+        return Identifier.of("textures/models/armor/" + materialName + "_layer_" + (legs ? 2 : 1) + ".png");
     }
 }

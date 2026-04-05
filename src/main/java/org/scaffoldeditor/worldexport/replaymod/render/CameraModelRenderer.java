@@ -26,7 +26,7 @@ import net.minecraft.util.math.Vec3d;
  */
 public class CameraModelRenderer {
 
-    public static final Identifier TEXTURE = new Identifier("worldexport", "textures/camera.png");
+    public static final Identifier TEXTURE = Identifier.of("worldexport", "textures/camera.png");
     private final RenderLayer RENDER_LAYER = RenderLayer.getEntitySolid(TEXTURE);
     // private final RenderLayer RENDER_LAYER = RenderLayer.getEntityTranslucentEmissive(TEXTURE);
 
@@ -56,13 +56,14 @@ public class CameraModelRenderer {
         // matrices.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) rot.roll()));
         
         ReadableColor color = animation.getColor();
-        float r = color.getRed() / 255f;
-        float g = color.getGreen() / 255f;
-        float b = color.getBlue() / 255f;
+        int argb = 0xFF000000
+                | ((color.getRed() & 0xFF) << 16)
+                | ((color.getGreen() & 0xFF) << 8)
+                | (color.getBlue() & 0xFF);
 
         // root.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
         main.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-        tinted.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, r, g, b, 1f);
+        tinted.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, argb);
 
         matrices.pop();
     }

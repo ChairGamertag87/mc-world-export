@@ -12,7 +12,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class ChickenModelAdapter extends AnimalModelAdapter<ChickenEntity> {
 
-    private static final Identifier TEXTURE = new Identifier("textures/entity/chicken.png");
+    private static final Identifier TEXTURE = Identifier.of("textures/entity/chicken.png");
 
     public ChickenModelAdapter(ChickenEntity entity)
             throws IllegalArgumentException {

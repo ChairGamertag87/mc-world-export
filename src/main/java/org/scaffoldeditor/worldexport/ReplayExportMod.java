@@ -19,14 +19,12 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.Version;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityType; 
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -41,11 +39,12 @@ public class ReplayExportMod implements ClientModInitializer {
 
     public static final EntityType<AnimatedCameraEntity> ANIMATED_CAMERA = Registry.register(
             Registries.ENTITY_TYPE, AnimatedCameraEntity.ID,
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, AnimatedCameraEntity::new)
-                    .dimensions(EntityDimensions.fixed(.75f, .75f))
-                    .disableSummon().build());
+            EntityType.Builder.create(AnimatedCameraEntity::new, SpawnGroup.MISC)
+                    .dimensions(.75f, .75f)
+                    .eyeHeight(0f)
+                    .disableSummon().build(AnimatedCameraEntity.ID.toString()));
         
-    public static final EntityModelLayer CAMERA_MODEL_LAYER = new EntityModelLayer(new Identifier("worldexport", "camera"), "main");
+    public static final EntityModelLayer CAMERA_MODEL_LAYER = new EntityModelLayer(Identifier.of("worldexport", "camera"), "main");
 
     public static ReplayExportMod getInstance() {
         return instance;
