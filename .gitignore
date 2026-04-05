@@ -45,3 +45,10 @@ logo/
 *.bak
 *.tmp
 *.orig
+
+# ---- Idea local files ----
+.idea/
+*.iml
+*.ipr
+*.iws
+
