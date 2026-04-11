@@ -9,10 +9,12 @@ import org.scaffoldeditor.worldexport.util.Box2i;
 import com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiContainer;
 import com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiPanel;
 import com.replaymod.lib.de.johni0702.minecraft.gui.element.GuiButton;
+import com.replaymod.lib.de.johni0702.minecraft.gui.element.GuiLabel;
 import com.replaymod.lib.de.johni0702.minecraft.gui.element.GuiSlider;
 import com.replaymod.lib.de.johni0702.minecraft.gui.layout.CustomLayout;
 import com.replaymod.lib.de.johni0702.minecraft.gui.layout.VerticalLayout;
 import com.replaymod.lib.de.johni0702.minecraft.gui.popup.AbstractGuiPopup;
+import com.replaymod.lib.de.johni0702.minecraft.gui.utils.Colors;
 import com.replaymod.lib.de.johni0702.minecraft.gui.utils.lwjgl.Dimension;
 import com.replaymod.lib.de.johni0702.minecraft.gui.utils.lwjgl.ReadableDimension;
 
@@ -29,6 +31,13 @@ public class GuiBoundsEditor extends AbstractGuiPopup<GuiBoundsEditor> {
 
     private List<Runnable> closeListeners = new LinkedList<>();
 
+    public final GuiLabel titleLabel = new GuiLabel()
+            .setI18nText("worldexport.gui.export.bounds")
+            .setColor(Colors.WHITE);
+
+    public final GuiLabel boundsInfoLabel = new GuiLabel()
+            .setColor(Colors.LIGHT_GRAY);
+
     public final GuiSlider upperLimitSlider = new GuiSlider().onValueChanged(this::handleChangeUpperLimit)
             .setHeight(20).setSteps(32);
 
@@ -39,6 +48,7 @@ public class GuiBoundsEditor extends AbstractGuiPopup<GuiBoundsEditor> {
         if (getUpperLimit() < getLowerDepth()) {
             setLowerDepth(getUpperLimit());
         }
+        updateBoundsInfo();
     }
 
     public void setUpperLimit(int upperLimit) {
@@ -60,6 +70,7 @@ public class GuiBoundsEditor extends AbstractGuiPopup<GuiBoundsEditor> {
         if (getLowerDepth() > getUpperLimit()) {
             setUpperLimit(getLowerDepth());
         }
+        updateBoundsInfo();
     }
 
     public void setLowerDepth(int lowerDepth) {
@@ -71,10 +82,13 @@ public class GuiBoundsEditor extends AbstractGuiPopup<GuiBoundsEditor> {
         return lowerDepthSlider.getValue() + minSection;
     }
 
-    private final GuiButton closeButton = new GuiButton().setI18nLabel("worldexport.gui.export.apply").onClick(this::close);
+    private final GuiButton applyButton = new GuiButton()
+            .setI18nLabel("worldexport.gui.export.apply")
+            .setSize(100, 20)
+            .onClick(this::close);
 
     private final GuiPanel bottomPanel = new GuiPanel().setLayout(new VerticalLayout().setSpacing(5))
-            .addElements(new VerticalLayout.Data(0.5), upperLimitSlider, lowerDepthSlider, closeButton);
+            .addElements(new VerticalLayout.Data(0.5), upperLimitSlider, lowerDepthSlider);
 
     public GuiBoundsEditor(GuiContainer<?> container, World world, int width, int height, ChunkPos rootPos) {
         super(container);
@@ -87,42 +101,48 @@ public class GuiBoundsEditor extends AbstractGuiPopup<GuiBoundsEditor> {
 
             @Override
             protected void layout(GuiPanel panel, int width, int height) {
-                pos(bottomPanel, 0, height - height(bottomPanel));
+                // Title at top
+                pos(titleLabel, width / 2 - width(titleLabel) / 2, 5);
+
+                // Apply button at bottom
+                pos(applyButton, width / 2 - width(applyButton) / 2, height - height(applyButton) - 5);
+
+                // Bottom panel (sliders) above the button
+                pos(bottomPanel, 0, height - height(applyButton) - 10 - height(bottomPanel) - 5);
                 width(bottomPanel, width);
 
-                size(overview, container.getMinSize());
+                // Bounds info above sliders
+                pos(boundsInfoLabel, width / 2 - width(boundsInfoLabel) / 2,
+                        y(bottomPanel) - height(boundsInfoLabel) - 5);
 
-                pos(overview, 0, 0);
+                // Overview map fills the remaining space
+                int mapTop = y(titleLabel) + height(titleLabel) + 8;
+                int mapBottom = y(boundsInfoLabel) - 8;
+                pos(overview, 0, mapTop);
                 width(overview, width);
-                height(overview, height - height(bottomPanel) - 5);
-                
+                height(overview, Math.max(64, mapBottom - mapTop));
             }
 
             @Override
             public ReadableDimension calcMinSize(GuiContainer<?> localContainer) {
-                // ReadableDimension overviewSize = overview.calcMinSize();
-                // ReadableDimension panelSize = bottomPanel.calcMinSize();
-
-                // return new Dimension(Math.max(overviewSize.getWidth(), panelSize.getWidth()),
-                //         overviewSize.getHeight() + panelSize.getHeight() + 5);
-
                 ReadableDimension containerMin = container.getMinSize();
-                return new Dimension(Math.min(384, containerMin.getWidth() - 64),
-                        Math.min(384, containerMin.getHeight() - 64));
-
-                // return new Dimension(containerMin.getWidth() - 128, containerMin.getHeight() - 128);
+                int popupWidth = Math.min(320, (int)(containerMin.getWidth() * 0.65));
+                int popupHeight = Math.min(350, (int)(containerMin.getHeight() * 0.7));
+                return new Dimension(popupWidth, popupHeight);
             }
-            
-        }).addElements(null, overview, bottomPanel);
-        
-        
 
-        // overview.setSize(256, 266);
-        // popup.setLayout(new VerticalLayout().setSpacing(10))
-        //         .addElements(new VerticalLayout.Data(0.5), overview, upperLimitSlider, lowerDepthSlider, closeButton);
+        }).addElements(null, titleLabel, overview, boundsInfoLabel, bottomPanel, applyButton);
 
         setLowerDepth(minSection);
         setUpperLimit(maxSection);
+    }
+
+    private void updateBoundsInfo() {
+        Box2i b = overview.getBounds();
+        int chunksX = Math.abs(b.getX2() - b.getX1()) + 1;
+        int chunksZ = Math.abs(b.getY2() - b.getY1()) + 1;
+        boundsInfoLabel.setText(chunksX + " x " + chunksZ + " chunks"
+                + "  |  Y: " + (getLowerDepth() * 16) + " to " + (getUpperLimit() * 16 + 15));
     }
 
     public GuiBoundsOverview getOverview() {
@@ -146,8 +166,9 @@ public class GuiBoundsEditor extends AbstractGuiPopup<GuiBoundsEditor> {
         overview.setBounds(bounds2d);
         setLowerDepth(bounds.getMinY());
         setUpperLimit(bounds.getMaxY());
+        updateBoundsInfo();
     }
-    
+
     @Override
     protected void close() {
         super.close();
